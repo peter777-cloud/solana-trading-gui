@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="refresh" content="2;url=verification.html">
+    <meta charset="UTF-8">
+    <title>RC's Solana Trading Bot</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1,
+        h2,
+        p,
+        select,
+        input,
+        button {
+            color: #bb86fc;
+            margin: 10px 0;
+        }
+
+        .section {
+            background-color: #252525;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        input,
+        select,
+        button {
+            padding: 8px;
+            width: 100%;
+            background-color: #2b2b2b;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #3700b3;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #6200ea;
+        }
+
+        #priceTicker {
+            font-size: 24px;
+            font-weight: bold;
+            position: fixed;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #feedbackMessage {
+            color: #ffcc00;
+        }
+
+        #botFeedbackMessage {
+            color: #ffcc00;
+        }
+
+        #startMessage {
+            color: #ffcc00;
+        }
+
+        .tradingview-widget-container {
+            margin-bottom: 30px;
+        }
+
+        .section.trading-bot-control {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>RC's Solana Trading Bot</h1>
+
+    <div id="priceTicker"><span id="currentPrice"></span></div>
+
+    <div class="section" id="accountSelection">
+        <h2>Wallet Management</h2>
+        <select id="accountList" onchange="updateAccountInfo()">
+            <option value="">Select an Account</option>
+        </select>
+        <button onclick="deleteSelectedAccount()" id="deleteAccountBtn">Delete Wallet Info</button>
+        <p id="startMessage" class="hidden">To get started, you need to add a Solana wallet.</p>
+        <div id="feedbackMessage"></div>
+    </div>
+
+    <div class="section hidden" id="addAccountForm">
+        <h2>Add New Account</h2>
+        <input type="text" id="accountName" placeholder="Enter friendly name">
+        <input type="text" id="accountAddress" placeholder="Enter SOL address">
+        <input type="password" id="accountKey" placeholder="Enter private key">
+        <select id="networkType">
+            <option value="false">Development</option>
+            <option value="true">Production</option>
+        </select>
+        <button onclick="saveNewAccount()">Save Account</button>
+    </div>
+
+    <div class="section">
+        <h2>Charts</h2>
+        <img src="img/charts.png" alt="Trading Chart" style="width: 100%; max-width: 600px; border-radius: 10px;">
+    </div>
+
+    </div>
+
+    <div class="section">
+        <h2>Charts</h2>
+        <img src="charts.png" alt="Trading Chart" style="width: 100%; max-width: 600px; border-radius: 10px;">
+    </div>
+    </div>
+
+    <div class="section" id="marketAnalysis">
+        <h2>Market Analysis</h2>
+        <button onclick="fetchMarketData()">Fetch Market Data</button>
+        <p id="marketPrice">Current Market Price: --</p>
+        <p id="shortSMA">Short SMA: --</p>
+        <p id="longSMA">Long SMA: --</p>
+        <p id="shortEMA">Short EMA: --</p>
+        <p id="longEMA">Long EMA: --</p>
+        <p id="tradingDecision">Trading Decision: --</p>
+    </div>
+</body>
+
+<script>
+    function fetchMarketData() {
+        fetch('https://price.jup.ag/v4/price?ids=SOL')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('marketPrice').textContent = 'Current Market Price: ' + data.data.SOL.price.toFixed(2) + ' USD';
+            })
+            .catch(err => console.error('Error fetching market data:', err));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchMarketData();
+    });
+</script>
+
+</html>
